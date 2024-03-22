@@ -4,7 +4,8 @@
 
 ### 3rd party libraries used:
 - Redux Toolkit (state management)
-- Tanstack Query (data fetching)\
+- Tanstack Query (data fetching)
+- React Hook Form (form handeling)\
 <br />
 
 To run app locally on your machine first **clone** repository,  

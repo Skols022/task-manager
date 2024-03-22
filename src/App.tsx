@@ -3,26 +3,26 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import BoardSettings from './components/BoardSettings';
-import Button from './components/UI/Button';
-import TaskList from './components/TaskList';
+import Board from './components/Board';
+import Layout from './components/UI/Layout';
 
 const queryClient = new QueryClient();
 
 function App() {
-
   return (
     <QueryClientProvider client={queryClient}>
-      <header>
-        <BoardSettings />
-      </header>
-      <main>
-        <div>
-          <section>
-            <Button />
-            <TaskList />
-          </section>
-        </div>
-      </main>
+      <Layout>
+        <header>
+          <BoardSettings />
+        </header>
+        <main>
+          <div className='mt-[20px]'>
+            <section className='w-full'>
+              <Board />
+            </section>
+          </div>
+        </main>
+      </Layout>
     </QueryClientProvider>
   )
 }

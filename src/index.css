@@ -1,3 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html {
+  font-family: 'Montserrat';
+  font-weight: 400;
+  font-size: 1rem;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+@layer utilities {
+  .container {
+    width: 100%;
+    max-width: 1258px;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+
+  .flex-between {
+    @apply flex justify-between items-center;
+  }
+
+  .flex-column-center {
+    @apply flex-col justify-between items-center;
+  }
+
+  .h1-text {
+    @apply text-[50px] leading-[72px] tracking-tighter;
+  }
+
+  .h2-text {
+    @apply text-[40px] leading-[31.2px];
+  }
+
+  .h3-text {
+    @apply text-[30px] leading-[31.2px];
+  }
+
+  .h4-text {
+    @apply text-[20px] leading-[31.2px];
+  }
+
+  .p-text {
+    @apply text-[15px] leading-[31.2px];
+  }
+
+  .p-small-text {
+    @apply text-[18px] leading-[31.2px];
+  }
+}
