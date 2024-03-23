@@ -1,5 +1,4 @@
-import { FC, useRef } from 'react';
-import Draggable from 'react-draggable';
+import { FC } from 'react';
 
 interface TaskCardProps {
   name: string;
@@ -12,12 +11,16 @@ interface TaskCardProps {
   onDragEnd: () => void;
 }
 
-const TaskCard: FC<TaskCardProps> = ({ name, description, status, assignedTo, draggable,
+const TaskCard: FC<TaskCardProps> = ({ 
+  name, 
+  description, 
+  status, 
+  assignedTo, 
+  draggable,
   onDragStart,
   onDragEnter,
   onDragEnd }) => {
   return (
-    // <Draggable grid={[10, 10]} axis='y' bounds='parent'>
     <div
       draggable={draggable}
       onDragStart={onDragStart}
@@ -39,7 +42,6 @@ const TaskCard: FC<TaskCardProps> = ({ name, description, status, assignedTo, dr
         <p className='p-text text-green-400'>{status}</p>
       </div>
     </div>
-    // {/* </Draggable> */}
   )
 }
 

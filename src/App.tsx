@@ -1,16 +1,17 @@
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+import { Provider } from 'react-redux';
 import BoardSettings from './components/BoardSettings';
 import Board from './components/Board';
 import Layout from './components/UI/Layout';
-
-const queryClient = new QueryClient();
+import { useFetchTasksData } from './hooks/useFetchTasksData';
+import { useFetchCollaboratorsData } from './hooks/useFetchCollaboratorsData';
+import { store } from './app/store';
 
 function App() {
+  const { data: tasksData, isLoading: isTasksDataLoading } = useFetchTasksData();
+  const { data: collaboratorsData, isLoading: isCollaboratorsDataLoading } = useFetchCollaboratorsData();
+
   return (
-    <QueryClientProvider client={queryClient}>
+    <Provider store={store}>
       <Layout>
         <header>
           <BoardSettings />
@@ -23,7 +24,7 @@ function App() {
           </div>
         </main>
       </Layout>
-    </QueryClientProvider>
+    </Provider>
   )
 }
 
