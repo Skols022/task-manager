@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import { unknownData } from '../utils/api';
 import { useFetchCollaboratorsData } from '../hooks/useFetchCollaboratorsData';
-import { ServedTasks, useFetchTasksData } from '../hooks/useFetchTasksData';
+import { ServedTasks } from '../hooks/useFetchTasksData';
 import { useSelector } from 'react-redux';
 import DraggableList from './DragableList';
 import Skeleton from './Skeleton';
@@ -14,7 +14,7 @@ const Board: FC<BoardProps> = ({ data }) => {
   const { data: collabData, isLoading } = useFetchCollaboratorsData();
   const [cards, setCards] = useState<unknownData>(data);
   const filters = useSelector((state: unknownData) => state.tasks.filter);
-  
+
   useEffect(() => {
     // filters
     const filteredCards = filters?.assignee.length > 0 || filters?.status ?
@@ -22,21 +22,21 @@ const Board: FC<BoardProps> = ({ data }) => {
         let statusPasses = true;
         let assigneePasses = true;
         let allPasses = true;
-        
+
         if (filters.status && task.taskStatus !== filters.status) {
           statusPasses = false;
         }
-        
+
         if (filters.assignee.length > 0 && !filters.assignee.includes(task.assigneeId)) {
           assigneePasses = false;
         }
 
         if (
-            filters.assignee.length > 0 && 
-            filters.status && 
-            filters.assignee.includes(task.assigneeId) && 
-            task.taskStatus !== filters.status
-          ) {
+          filters.assignee.length > 0 &&
+          filters.status &&
+          filters.assignee.includes(task.assigneeId) &&
+          task.taskStatus !== filters.status
+        ) {
           allPasses = false;
         }
 
@@ -47,11 +47,17 @@ const Board: FC<BoardProps> = ({ data }) => {
   }, [filters, data]);
 
   return (
-    <div className='flex flex-column-center cursor-pointer'> 
+    <div className='flex flex-column-center cursor-pointer'>
       {isLoading ? (
         <Skeleton withoutHeader={true} />
       ) : (
-        <DraggableList items={cards} collabData={collabData} />
+        cards.length === 0 ? (
+          <div className='mt-[50px]'>
+            <h1 className='h1-text font-bold'>There is No Tasks...</h1>
+          </div>
+        ) : (
+          <DraggableList items={cards} collabData={collabData} />
+        )
       )}
     </div>
   )
