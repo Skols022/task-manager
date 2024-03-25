@@ -9,7 +9,8 @@ export const remapTasksData = (
     description,
     assigneeId: assigneeId,
     taskStatus: completed_at ? 'completed' : 'in_progress',
-    taskId: id || task_id,
+    inProgressTaskId: id,
+    completedTaskId: task_id,
     otherData: { ...rest }
   })) || [];
 }

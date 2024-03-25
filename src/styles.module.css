@@ -1,9 +1,12 @@
 .content {
-  width: 100%
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .content > div {
   position: absolute;
-  width: 84%;
+  width: 50%;
   height: 300px;
 }

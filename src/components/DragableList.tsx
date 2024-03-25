@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { FC, useRef } from 'react'
 import { useSprings, animated, config } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
 import clamp from 'lodash.clamp'
@@ -11,12 +11,17 @@ import TaskCard from './TaskCard'
 import { ServedTasks } from '../hooks/useFetchTasksData'
 import { User } from '@doist/todoist-api-typescript'
 
+interface DragableListProps {
+  items: ServedTasks[]
+  collabData?: User[] | null
+}
+
 const fn =
   (order: number[], active = false, originalIndex = 0, curIndex = 0, y = 0) => 
   (index: number) => {
       return active && index === originalIndex
         ? {
-          y: curIndex * 310 + y,
+          y: curIndex * 328 + y,
           scale: 1.1,
           zIndex: 1,
           shadow: 15,
@@ -24,7 +29,7 @@ const fn =
           config: (key: string) => (key === 'y' ? config.stiff : config.default),
         }
         : {
-          y: order.indexOf(index) * 310,
+          y: order.indexOf(index) * 328,
           scale: 1,
           zIndex: 0,
           shadow: 1,
@@ -32,7 +37,7 @@ const fn =
         }
     }
 
-const DraggableList = ({ items, collabData }: { items: ServedTasks[], collabData: User[] | null }) => {
+const DraggableList: FC<DragableListProps> = ({ items, collabData }) => {
   const order = useRef(items.map((_, index) => index));
   const [springs, api] = useSprings(items.length, fn(order.current))
   const bind = useDrag(({ args: [originalIndex], active, movement: [, y] }) => {
@@ -44,7 +49,7 @@ const DraggableList = ({ items, collabData }: { items: ServedTasks[], collabData
   })
 
   return (
-    <div className={styles.content} style={{ height: items.length * 100 }}>
+    <div className={styles.content}>
       {springs.map(({ zIndex, shadow, y, scale }, i) => {
         return (
           <animated.div
@@ -55,6 +60,7 @@ const DraggableList = ({ items, collabData }: { items: ServedTasks[], collabData
               boxShadow: shadow.to(s => `rgba(0, 0, 0, 0.15) 0px ${s}px ${2 * s}px 0px`),
               y,
               scale,
+              touchAction: 'pan-y'
             }}
             children={<TaskCard data={items[i]} collabData={collabData} />}
           />

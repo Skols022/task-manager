@@ -8,7 +8,8 @@ export interface ServedTasks {
   description: string | undefined;
   assigneeId: string | undefined;
   taskStatus: string | undefined;
-  taskId: string;
+  inProgressTaskId: string;
+  completedTaskId: string;
   otherData: { [key: string]: string | number | boolean | undefined | null }
 }
 
@@ -31,7 +32,7 @@ export const useFetchTasksData = () => {
         });
         const resultInProgressTasks = await api.getTasks();
         const responseCompletedTasks = await completedTasks.json();
-        const tasks = [...(responseCompletedTasks?.items || []), ...resultInProgressTasks]
+        const tasks = [...(responseCompletedTasks?.items || []), ...resultInProgressTasks];
         const remappedTasks = remapTasksData({ data: tasks });
         setData(remappedTasks);
       } catch (error) {

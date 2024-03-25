@@ -35,7 +35,11 @@ const TaskCard: FC<TaskCardProps> = ({
   const assignee = collabData?.find((user: User) => user.id === data?.assigneeId);
 
   const handleCloseTask = async ({ value }: { value: string }) => {
-    await dispatch(value === 'in_progress' ? reopenTask(data?.taskId as string) : closeTask(data?.taskId)).unwrap();
+    await dispatch(
+      value === 'in_progress' ? 
+      reopenTask(data?.completedTaskId as string) : 
+      closeTask(data?.inProgressTaskId as string)
+    ).unwrap();
   }
 
   return (
@@ -45,7 +49,7 @@ const TaskCard: FC<TaskCardProps> = ({
       onDragEnter={onDragEnter}
       onDragEnd={onDragEnd}
       onDragOver={(e) => e.preventDefault()}
-      className='flex-col items-center  bg-gradient-to-r from-zinc-100 to-zinc-300 w-full border-2 rounded-lg border-emerald-500 my-[20px] p-[20px] shadow-lg'>
+      className={`flex-col items-center  bg-gradient-to-r from-zinc-100 to-zinc-300 w-full border-2 rounded-lg ${data?.isCompleted ? 'border-emerald-500' : 'border-orange-400'} my-[20px] p-[20px] shadow-lg`}>
       <div className='flex items-center'>
         <h4 className='h4-text mr-[5px] font-normal'>Name:</h4>
         <h4 className='h4-text font-bold'>{data?.content}</h4>
@@ -68,6 +72,7 @@ const TaskCard: FC<TaskCardProps> = ({
           name='status'
           placeholder='Select Status'
           defaultAsyncValue={data?.isCompleted ? taskStatusOptions[1] : taskStatusOptions[0]}
+          textColor={data?.isCompleted ? '#22c55e' : '#f97316'}
         />
       </div>
     </div>

@@ -3,9 +3,18 @@ import Board from './components/Board';
 import Layout from './components/UI/Layout';
 import { useFetchTasksData } from './hooks/useFetchTasksData';
 import Skeleton from './components/Skeleton';
+import { useSelector } from 'react-redux';
+import { unknownData } from './utils/api';
+import { useEffect } from 'react';
 
 function App() {
-  const { data, isLoading } = useFetchTasksData();
+  const { data, isLoading, setRefetch } = useFetchTasksData();
+  const status = useSelector((state: unknownData) => state.tasks.status);
+  
+  useEffect(() => {
+      status === 'loading' && setRefetch(true);
+      status === 'succeeded' && setRefetch(false);
+  }, [status, setRefetch, data]);
 
   return (
     <Layout>

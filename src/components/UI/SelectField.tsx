@@ -25,6 +25,7 @@ interface SelectFieldProps<
   onAsyncChange?: (selectedOption: unknownData) => void;
   defaultAsyncValue?: Record<string, string> | undefined;
   isMulti?: boolean;
+  textColor?: string;
 }
 
 const SelectField: FC<SelectFieldProps> = ({
@@ -38,7 +39,8 @@ const SelectField: FC<SelectFieldProps> = ({
   onAsyncChange = () => undefined,
   defaultAsyncValue = undefined,
   defaultOptions = true,
-  isMulti = false
+  isMulti = false,
+  textColor = undefined
 }) => {
   return (
     <Controller
@@ -53,6 +55,14 @@ const SelectField: FC<SelectFieldProps> = ({
               loadOptions={asyncOptions}
               onChange={onAsyncChange}
               defaultValue={defaultAsyncValue}
+              styles={{
+                singleValue:(provided: unknownData) => ({
+                  ...provided,
+                  height:'100%',
+                  color: textColor || '#000',
+                  paddingTop:'3px',
+                }),
+              }}
             />) : (
             <Select
               placeholder={placeholder}
