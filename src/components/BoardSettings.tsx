@@ -22,7 +22,7 @@ const BoardSettings: FC = () => {
   }
 
   return (
-    <div className='flex-between mt-[20px]'>
+    <div className='flex flex-col md:flex-row justify-between items-center mt-[20px]'>
       <div className='mt-[20px]'>
       <Button title='Add Task' onClick={openModal} className='w-[200px] h-[50px] mt-[20px]' />
       </div>

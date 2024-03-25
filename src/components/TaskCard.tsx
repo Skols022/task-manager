@@ -62,7 +62,7 @@ const TaskCard: FC<TaskCardProps> = ({
         <p className='p-text font-normal'>Assigned to:</p>
         <p className='h4-text font-bold'>{assignee ? assignee?.name : 'Unassigned'}</p>
       </div>
-      <div className='flex items-center justify-end'>
+      <div className='flex flex-col items-center sm:flex-row justify-end'>
         <p className='p-text mr-[5px]'>Status:</p>
         <SelectField
           asyncSelect={true}
