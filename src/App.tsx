@@ -1,29 +1,38 @@
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
 import BoardSettings from './components/BoardSettings';
-import Button from './components/UI/Button';
-import TaskList from './components/TaskList';
-
-const queryClient = new QueryClient();
+import Board from './components/Board';
+import Layout from './components/UI/Layout';
+import { useFetchTasksData } from './hooks/useFetchTasksData';
+import Skeleton from './components/Skeleton';
+import { useSelector } from 'react-redux';
+import { unknownData } from './utils/api';
+import { useEffect } from 'react';
 
 function App() {
+  const { data, isLoading, setRefetch } = useFetchTasksData();
+  const status = useSelector((state: unknownData) => state.tasks.status);
+  
+  useEffect(() => {
+      status === 'loading' && setRefetch(true);
+      status === 'succeeded' && setRefetch(false);
+  }, [status, setRefetch, data]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <header>
-        <BoardSettings />
-      </header>
-      <main>
-        <div>
-          <section>
-            <Button />
-            <TaskList />
-          </section>
-        </div>
-      </main>
-    </QueryClientProvider>
+    <Layout>
+      {isLoading ? <Skeleton /> : (
+        <>
+          <header>
+            <BoardSettings />
+          </header>
+          <main>
+            <div className='mt-[20px]'>
+              <section className='w-full'>
+                <Board data={data} />
+              </section>
+            </div>
+          </main>
+        </>
+      )}
+    </Layout>
   )
 }
 
