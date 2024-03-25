@@ -26,3 +26,5 @@ and then run: `npm run dev`
 -   https://developer.todoist.com/rest/v2/?javascript#get-all-projects use this api endpoint to retrieve **project_id** (you can use Postamn)
 -   add **project_id** to your .env file
 -   add domain url to your .env file: **https//<i></i>api.todoist.com**
+-   if you want to have functionality to assign someone to task, you must share project with that person
+-   to share project click on **...** beside project name and click share than enter email address of the person you want to share project.
