@@ -1,0 +1,9 @@
+.content {
+  width: 100%
+}
+
+.content > div {
+  position: absolute;
+  width: 84%;
+  height: 300px;
+}

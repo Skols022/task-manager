@@ -1,16 +1,28 @@
 import { useEffect, useState } from 'react';
-import { Task } from "@doist/todoist-api-typescript";
 import { api } from '../utils/api';
+import { remapTasksData } from '../utils/remapTasksData';
+
+export interface ServedTasks {
+  isCompleted: boolean;
+  content: string;
+  description: string | undefined;
+  assigneeId: string | undefined;
+  taskStatus: string | undefined;
+  taskId: string;
+  otherData: { [key: string]: string | number | boolean | undefined | null }
+}
 
 export const useFetchTasksData = () => {
-  const [data, setData] = useState<Array<Task> | null>(null);
+  const [data, setData] = useState<Array<ServedTasks> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [refetch, setRefetch] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const completedTasks = await fetch('https://api.todoist.com/sync/v9/completed/get_all', {
+        const completedTasks = await fetch(`
+          ${import.meta.env.VITE_API_DOMAIN_URL}/sync/v9/completed/get_all`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -20,7 +32,8 @@ export const useFetchTasksData = () => {
         const resultInProgressTasks = await api.getTasks();
         const responseCompletedTasks = await completedTasks.json();
         const tasks = [...(responseCompletedTasks?.items || []), ...resultInProgressTasks]
-        setData(tasks);
+        const remappedTasks = remapTasksData({ data: tasks });
+        setData(remappedTasks);
       } catch (error) {
         console.log(error);
       }
@@ -28,7 +41,7 @@ export const useFetchTasksData = () => {
     };
 
     fetchData();
-  }, []);
+  }, [refetch]);
 
-  return { data, isLoading };
+  return { data, isLoading, setRefetch, setData };
 };

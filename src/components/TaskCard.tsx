@@ -1,25 +1,43 @@
+import { User } from '@doist/todoist-api-typescript';
 import { FC } from 'react';
+import SelectField from './UI/SelectField';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../app/store';
+import { closeTask, reopenTask } from '../features/tasks/taskSlice';
+import { useForm } from 'react-hook-form';
+import { ServedTasks } from '../hooks/useFetchTasksData';
 
 interface TaskCardProps {
-  name: string;
-  description: string;
-  status: string;
-  assignedTo: string;
-  draggable: boolean;
-  onDragStart: () => number;
-  onDragEnter: () => number;
-  onDragEnd: () => void;
+  data: ServedTasks;
+  collabData?: User[] | null;
+  draggable?: boolean;
+  onDragStart?: () => number;
+  onDragEnter?: () => number;
+  onDragEnd?: () => void;
 }
 
-const TaskCard: FC<TaskCardProps> = ({ 
-  name, 
-  description, 
-  status, 
-  assignedTo, 
+// eslint-disable-next-line react-refresh/only-export-components
+export const taskStatusOptions = [
+  { value: 'in_progress', label: 'In Progress' },
+  { value: 'completed', label: 'Completed' },
+];
+
+const TaskCard: FC<TaskCardProps> = ({
+  data,
+  collabData,
   draggable,
   onDragStart,
   onDragEnter,
   onDragEnd }) => {
+  const { control } = useForm()
+  const dispatch: AppDispatch = useDispatch<AppDispatch>();
+
+  const assignee = collabData?.find((user: User) => user.id === data?.assigneeId);
+
+  const handleCloseTask = async ({ value }: { value: string }) => {
+    await dispatch(value === 'in_progress' ? reopenTask(data?.taskId as string) : closeTask(data?.taskId)).unwrap();
+  }
+
   return (
     <div
       draggable={draggable}
@@ -27,19 +45,30 @@ const TaskCard: FC<TaskCardProps> = ({
       onDragEnter={onDragEnter}
       onDragEnd={onDragEnd}
       onDragOver={(e) => e.preventDefault()}
-      className='flex-col items-center  bg-gradient-to-r from-zinc-100 to-zinc-300 w-full border border-2 rounded-lg border-emerald-500 my-[20px] p-[20px] shadow-lg'>
-      <div className='flex items-center'><h4 className='h4-text mr-[5px] font-normal'>Name:</h4><h4 className='h4-text font-bold'>{name}</h4></div>
+      className='flex-col items-center  bg-gradient-to-r from-zinc-100 to-zinc-300 w-full border-2 rounded-lg border-emerald-500 my-[20px] p-[20px] shadow-lg'>
+      <div className='flex items-center'>
+        <h4 className='h4-text mr-[5px] font-normal'>Name:</h4>
+        <h4 className='h4-text font-bold'>{data?.content}</h4>
+      </div>
       <div className='flex-column-center my-[10px]'>
         <p className='p-text font-normal'>Description:</p>
-        <p className='p-text font-bold'>{description}</p>
+        <p className='p-text font-bold'>{data?.description || 'No description'}</p>
       </div>
       <div>
         <p className='p-text font-normal'>Assigned to:</p>
-        <p className='h4-text font-bold'>{assignedTo}</p>
+        <p className='h4-text font-bold'>{assignee ? assignee?.name : 'Unassigned'}</p>
       </div>
       <div className='flex items-center justify-end'>
         <p className='p-text mr-[5px]'>Status:</p>
-        <p className='p-text text-green-400'>{status}</p>
+        <SelectField
+          asyncSelect={true}
+          control={control}
+          defaultOptions={taskStatusOptions}
+          onAsyncChange={handleCloseTask}
+          name='status'
+          placeholder='Select Status'
+          defaultAsyncValue={data?.isCompleted ? taskStatusOptions[1] : taskStatusOptions[0]}
+        />
       </div>
     </div>
   )
